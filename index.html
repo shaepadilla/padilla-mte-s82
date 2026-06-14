@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduHub — Educational Resource Hub</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0F1923;
+      --card-bg:   #1A2B38;
+      --accent:    #00B4A6;
+      --accent-dim:#7EC8C0;
+      --text:      #E8F4F2;
+      --muted:     #8EADB8;
+      --border:    #243A4A;
+      --white:     #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 64px;
+      background: rgba(15, 25, 35, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .navbar__brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+
+    .navbar__links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .navbar__links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+      letter-spacing: 0.03em;
+    }
+
+    .navbar__links a:hover { color: var(--accent); }
+
+    .navbar__hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .navbar__hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--muted);
+      border-radius: 2px;
+      transition: background 0.2s;
+    }
+
+    .navbar__hamburger:hover span { background: var(--accent); }
+
+    /* ── SHARED SECTION STYLES ── */
+    section {
+      padding: 5rem 2.5rem;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    .section-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    /* teal underline signature */
+    .section-heading::after {
+      content: '';
+      display: block;
+      width: 3rem;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+      margin-top: 0.6rem;
+    }
+
+    .section-sub {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    /* ── HOME SECTION ── */
+    #home {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 40%, rgba(0,180,166,0.10) 0%, transparent 70%),
+        var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #home::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: 0.25;
+    }
+
+    .home__inner { position: relative; max-width: 680px; }
+
+    .home__eyebrow {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 0.3rem 0.9rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+    }
+
+    .home__headline {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 7vw, 4rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+    }
+
+    .home__headline em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .home__desc {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin-bottom: 2.5rem;
+      max-width: 460px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 2.2rem;
+      background: var(--accent);
+      color: var(--bg);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn:hover { background: var(--accent-dim); transform: translateY(-1px); }
+
+    .btn--outline {
+      background: transparent;
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+    }
+
+    .btn--outline:hover { background: rgba(0,180,166,0.1); }
+
+    /* ── INTRODUCTION SECTION ── */
+    #introduction {
+      border-top: 1px solid var(--border);
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .intro__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-top: 2.5rem;
+    }
+
+    .intro__stat {
+      border-left: 3px solid var(--accent);
+      padding-left: 1.2rem;
+    }
+
+    .intro__stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .intro__stat-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    .intro__body {
+      color: var(--muted);
+      font-size: 0.97rem;
+      line-height: 1.8;
+    }
+
+    /* ── FEATURED SECTION ── */
+    #featured {
+      background: var(--card-bg);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .featured__header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 2.5rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .featured__browse {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .featured__browse span {
+      display: inline-block;
+      background: rgba(0,180,166,0.12);
+      color: var(--accent);
+      padding: 0.25rem 0.8rem;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-right: 0.4rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .featured__browse span:hover { border-color: var(--accent); }
+
+    .featured__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .card:hover { transform: translateY(-4px); border-color: var(--accent); }
+
+    .card__img {
+      width: 100%;
+      aspect-ratio: 16/10;
+      background: linear-gradient(135deg, #1A2B38 0%, #243A4A 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+
+    .card__body { padding: 1rem; }
+
+    .card__tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+
+    .card__title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    .card__desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* ── CATEGORIES SECTION ── */
+    #categories-section {
+      border-top: 1px solid var(--border);
+    }
+
+    #categories {
+      margin-top: 2.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .cat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem 1rem 1rem;
+      text-align: center;
+      transition: border-color 0.2s, background 0.2s;
+      cursor: pointer;
+    }
+
+    .cat-card:hover {
+      border-color: var(--accent);
+      background: rgba(0,180,166,0.06);
+    }
+
+    .cat-card__icon {
+      font-size: 2.2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .cat-card__name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 0.4rem;
+    }
+
+    .cat-card__count {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    /* ── RESOURCES SECTION ── */
+    #resources {
+      margin-top: 3.5rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .resources__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .resource-item {
+      display: flex;
+      gap: 1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.2rem;
+      align-items: flex-start;
+      transition: border-color 0.2s;
+    }
+
+    .resource-item:hover { border-color: var(--accent-dim); }
+
+    .resource-item__icon {
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+
+    .resource-item__title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--white);
+      margin-bottom: 0.3rem;
+    }
+
+    .resource-item__desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+      line-height: 1.5;
+    }
+
+    /* ── ABOUT SECTION ── */
+    #about {
+      background: var(--card-bg);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .about__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      margin-top: 2.5rem;
+    }
+
+    #mission {
+      background: rgba(0,180,166,0.06);
+      border: 1px solid rgba(0,180,166,0.2);
+      border-radius: 8px;
+      padding: 2rem;
+    }
+
+    .mission__heading {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--white);
+      margin-bottom: 1rem;
+    }
+
+    .mission__text {
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.8;
+      font-style: italic;
+    }
+
+    #contact {
+      padding-top: 0;
+    }
+
+    .contact__heading {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+    }
+
+    .contact__item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .contact__item a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .contact__item a:hover { color: var(--accent); }
+
+    .contact__icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(0,180,166,0.1);
+      border: 1px solid rgba(0,180,166,0.25);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .navbar__links { display: none; }
+      .navbar__links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: rgba(15,25,35,0.98);
+        padding: 1.5rem 2rem;
+        gap: 1.2rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .navbar__hamburger { display: flex; }
+
+      section { padding: 3.5rem 1.25rem; }
+
+      .intro__grid { grid-template-columns: 1fr; gap: 2rem; }
+      .about__grid { grid-template-columns: 1fr; gap: 2rem; }
+      .resources__grid { grid-template-columns: 1fr; }
+
+      .featured__header { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 480px) {
+      #categories { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <a href="#home" class="navbar__brand">EduHub</a>
+    <ul class="navbar__links" id="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#introduction">Intro</a></li>
+      <li><a href="#featured">Featured</a></li>
+      <li><a href="#categories-section">Categories</a></li>
+      <li><a href="#resources">Sample Resources</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <button class="navbar__hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- HOME SECTION -->
+  <section id="home">
+    <div class="home__inner">
+      <span class="home__eyebrow">Your Learning Starts Here</span>
+      <h1 class="home__headline">
+        Discover Resources That <em>Elevate</em> Your Knowledge
+      </h1>
+      <p class="home__desc">
+        A curated hub of educational materials, guides, and tools — organized so you can find exactly what you need and keep moving forward.
+      </p>
+      <a href="#featured" class="btn">Get Started</a>
+    </div>
+  </section>
+
+  <!-- INTRODUCTION SECTION -->
+  <section id="introduction">
+    <span class="section-label">About This Hub</span>
+    <h2 class="section-heading">Learning, Organized for You</h2>
+    <p class="section-sub">
+      EduHub brings together the best educational resources across disciplines — vetted, categorized, and made accessible so you spend more time learning and less time searching.
+    </p>
+    <div class="intro__grid">
+      <div>
+        <div class="intro__stat">
+          <div class="intro__stat-num">500+</div>
+          <div class="intro__stat-label">Curated Resources</div>
+        </div>
+      </div>
+      <div>
+        <div class="intro__stat">
+          <div class="intro__stat-num">12</div>
+          <div class="intro__stat-label">Subject Categories</div>
+        </div>
+      </div>
+      <div class="intro__body" style="grid-column: span 2;">
+        We believe great education shouldn't be buried under clutter. Every resource here has been hand-picked for quality, relevance, and accessibility — whether you're a beginner or a practitioner looking to deepen your expertise.
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED SECTION -->
+  <section id="featured">
+    <div class="featured__header">
+      <div>
+        <span class="section-label">Editor's Picks</span>
+        <h2 class="section-heading">Featured Resources</h2>
+      </div>
+      <div class="featured__browse">
+        Browse by Category:
+        <span>All</span>
+        <span>Web Dev</span>
+        <span>Design</span>
+        <span>Data</span>
+      </div>
+    </div>
+    <div class="featured__grid">
+      <div class="card">
+        <div class="card__img">🌐</div>
+        <div class="card__body">
+          <div class="card__tag">Web Development</div>
+          <div class="card__title">Modern HTML & CSS Fundamentals</div>
+          <div class="card__desc">Master the building blocks of every website with hands-on exercises and real projects.</div>
+          <div class="card__footer">
+            <a href="#" class="btn btn--outline" style="padding:0.45rem 1rem;font-size:0.8rem;">Read More</a>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__img">⚡</div>
+        <div class="card__body">
+          <div class="card__tag">JavaScript</div>
+          <div class="card__title">JavaScript: From Zero to Async</div>
+          <div class="card__desc">A comprehensive guide covering ES6+, Promises, and modern async patterns.</div>
+          <div class="card__footer">
+            <a href="#" class="btn btn--outline" style="padding:0.45rem 1rem;font-size:0.8rem;">Read More</a>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__img">🎨</div>
+        <div class="card__body">
+          <div class="card__tag">Design</div>
+          <div class="card__title">UI/UX Design Principles</div>
+          <div class="card__desc">Learn to design interfaces that users love — from wireframes to polished prototypes.</div>
+          <div class="card__footer">
+            <a href="#" class="btn btn--outline" style="padding:0.45rem 1rem;font-size:0.8rem;">Read More</a>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__img">🗄️</div>
+        <div class="card__body">
+          <div class="card__tag">Backend</div>
+          <div class="card__title">Node.js & Express in Practice</div>
+          <div class="card__desc">Build robust REST APIs and server-side apps with the Node.js ecosystem.</div>
+          <div class="card__footer">
+            <a href="#" class="btn btn--outline" style="padding:0.45rem 1rem;font-size:0.8rem;">Read More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES SECTION -->
+  <section id="categories-section">
+    <span class="section-label">Explore</span>
+    <h2 class="section-heading">Browse by Category</h2>
+    <p class="section-sub">Find resources matched to your focus area. Each category is continuously updated with new material.</p>
+
+    <div id="categories">
+      <div class="cat-card">
+        <div class="cat-card__icon">🌐</div>
+        <div class="cat-card__name">Web Development</div>
+        <div class="cat-card__count">84 resources</div>
+        <a href="#" class="btn" style="font-size:0.78rem;padding:0.4rem 1rem;">View Resource</a>
+      </div>
+      <div class="cat-card">
+        <div class="cat-card__icon">⚡</div>
+        <div class="cat-card__name">JavaScript</div>
+        <div class="cat-card__count">67 resources</div>
+        <a href="#" class="btn" style="font-size:0.78rem;padding:0.4rem 1rem;">View Resource</a>
+      </div>
+      <div class="cat-card">
+        <div class="cat-card__icon">🎨</div>
+        <div class="cat-card__name">UI / UX Design</div>
+        <div class="cat-card__count">45 resources</div>
+        <a href="#" class="btn" style="font-size:0.78rem;padding:0.4rem 1rem;">View Resource</a>
+      </div>
+      <div class="cat-card">
+        <div class="cat-card__icon">🗄️</div>
+        <div class="cat-card__name">Databases</div>
+        <div class="cat-card__count">39 resources</div>
+        <a href="#" class="btn" style="font-size:0.78rem;padding:0.4rem 1rem;">View Resource</a>
+      </div>
+      <div class="cat-card">
+        <div class="cat-card__icon">📊</div>
+        <div class="cat-card__name">Data Science</div>
+        <div class="cat-card__count">52 resources</div>
+        <a href="#" class="btn" style="font-size:0.78rem;padding:0.4rem 1rem;">View Resource</a>
+      </div>
+      <div class="cat-card">
+        <div class="cat-card__icon">🔒</div>
+        <div class="cat-card__name">Cybersecurity</div>
+        <div class="cat-card__count">28 resources</div>
+        <a href="#" class="btn" style="font-size:0.78rem;padding:0.4rem 1rem;">View Resource</a>
+      </div>
+    </div>
+
+    <!-- SAMPLE RESOURCES -->
+    <div id="resources">
+      <span class="section-label">Sample Resources</span>
+      <h2 class="section-heading">Try These First</h2>
+      <div class="resources__grid">
+        <div class="resource-item">
+          <div class="resource-item__icon">📄</div>
+          <div>
+            <div class="resource-item__title">Intro to Responsive Design</div>
+            <div class="resource-item__desc">A beginner-friendly guide to building layouts that work on any screen size.</div>
+            <a href="#" class="btn btn--outline" style="font-size:0.78rem;padding:0.4rem 1rem;">Read More</a>
+          </div>
+        </div>
+        <div class="resource-item">
+          <div class="resource-item__icon">🎬</div>
+          <div>
+            <div class="resource-item__title">JavaScript Event Loop Explained</div>
+            <div class="resource-item__desc">Visual walkthrough of how JS handles async tasks under the hood.</div>
+            <a href="#" class="btn btn--outline" style="font-size:0.78rem;padding:0.4rem 1rem;">Watch Now</a>
+          </div>
+        </div>
+        <div class="resource-item">
+          <div class="resource-item__icon">🗺️</div>
+          <div>
+            <div class="resource-item__title">Full-Stack Roadmap 2025</div>
+            <div class="resource-item__desc">Step-by-step path from HTML basics to deploying production apps.</div>
+            <a href="#" class="btn btn--outline" style="font-size:0.78rem;padding:0.4rem 1rem;">View Map</a>
+          </div>
+        </div>
+        <div class="resource-item">
+          <div class="resource-item__icon">📚</div>
+          <div>
+            <div class="resource-item__title">MongoDB Quick Reference</div>
+            <div class="resource-item__desc">Cheat sheet covering queries, aggregation, and schema design patterns.</div>
+            <a href="#" class="btn btn--outline" style="font-size:0.78rem;padding:0.4rem 1rem;">Download</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT SECTION -->
+  <section id="about">
+    <span class="section-label">Who We Are</span>
+    <h2 class="section-heading">About EduHub</h2>
+    <div class="about__grid">
+
+      <div id="mission">
+        <div class="mission__heading">Our Mission Statement</div>
+        <p class="mission__text">
+          "To make high-quality educational resources accessible to every learner — regardless of background, location, or experience level. We curate, organize, and amplify the best learning materials so that curiosity always finds its next step."
+        </p>
+      </div>
+
+      <div id="contact">
+        <div class="contact__heading">Get in Touch</div>
+        <div class="contact__item">
+          <div class="contact__icon">✉️</div>
+          <a href="mailto:hello@eduhub.io">hello@eduhub.io</a>
+        </div>
+        <div class="contact__item">
+          <div class="contact__icon">📞</div>
+          <a href="tel:+1234567890">+1 (234) 567-890</a>
+        </div>
+        <div class="contact__item">
+          <div class="contact__icon">📍</div>
+          <span>Quezon City, Philippines</span>
+        </div>
+        <div style="margin-top:1.5rem;">
+          <a href="mailto:hello@eduhub.io" class="btn">Send a Message</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 <a href="#home">EduHub</a>. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Hamburger toggle
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('nav-links');
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    // Close menu on link click (mobile)
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => navLinks.classList.remove('open'));
+    });
+  </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
